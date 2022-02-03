@@ -1,8 +1,6 @@
 const dynamoose = require('dynamoose'); //3rd party
-const { nanoid } = require('nanoid');
 
 exports.handler = async (event) => {
-  console.log(event);
 
   let peopleSchema = new dynamoose.Schema({
     id: String,
@@ -14,18 +12,13 @@ exports.handler = async (event) => {
   //people needs to match the name of the table name on AWS
   let People = dynamoose.model('people', peopleSchema);
 
-  let personObj = JSON.parse(event.body);
-  personObj.id = `${nanoid()}`;
+  let id = event.queryStringParameters && event.queryStringParameters.id ? event.queryStringParameters.id : null;
 
-  console.log("nanoid", nanoid());
-
-  console.log(personObj.firstName);
-
-  const newRecord = await People.create(personObj);
+  await People.delete(id);
 
   const response = {
     statusCode: 201,
-    body: JSON.stringify(newRecord),
+    body: JSON.stringify('Successfully Deleted Person'),
   };
   return response;
 };
