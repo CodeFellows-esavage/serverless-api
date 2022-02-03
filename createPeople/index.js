@@ -17,7 +17,11 @@ exports.handler = async (event) => {
   let personObj = event.body;
   personObj.id = `${nanoid()}`;
 
-  const newRecord = await People.create(personObj).exec();
+  console.log("nanoid", nanoid());
+
+  console.log(personObj.firstName);
+
+  const newRecord = await People.create(personObj);
 
   const response = {
     statusCode: 201,
