@@ -14,7 +14,7 @@ exports.handler = async (event) => {
   //people needs to match the name of the table name on AWS
   let People = dynamoose.model('people', peopleSchema);
 
-  let personObj = event.body;
+  let personObj = JSON.parse(event.body);
   personObj.id = `${nanoid()}`;
 
   console.log("nanoid", nanoid());
