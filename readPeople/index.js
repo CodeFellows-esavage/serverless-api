@@ -1,8 +1,9 @@
-const dynamoose = require('dynomoose'); //3rd party
+const dynamoose = require('dynamoose'); //3rd party
 
 exports.handler = async (event) => {
   console.log(event);
   console.log(event.pathParameters);
+
 
   let peopleSchema = new dynamoose.Schema({
     id: String,
@@ -13,12 +14,18 @@ exports.handler = async (event) => {
 
   //people needs to match the name of the table name on AWS
   let People = dynamoose.model('people', peopleSchema);
+  let id = event.queryStringParameters && event.queryStringParameters.id ? event.queryStringParameters.id : null;
 
-  //get person by query by id
-  // let records = await People.query('id').eq(id).exec();
+  console.log(id);
 
-  //get all people
-  let records = await People.scan().exec();
+  let records;
+  if (id) {
+    //get person by query by id
+    records = await People.query('id').eq(id).exec();
+  } else {
+    //get all people
+    records = await People.scan().exec();
+  }
 
   const response = {
     statusCode: 200,
